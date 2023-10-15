@@ -595,21 +595,26 @@ function getClosestNodeInstance(
   return null;
 }
 
-function getNodeInstance(fiberNode: any, specId?: string): IPublicTypeNodeInstance<ReactInstance> | null {
+function getNodeInstance(fiberNode: any, specId?: string, dom?: Element): IPublicTypeNodeInstance<ReactInstance> | null {
   const instance = fiberNode?.stateNode;
+  if (isElement(instance)) {
+    dom = instance;
+  }
   if (instance && SYMBOL_VNID in instance) {
     const nodeId = instance[SYMBOL_VNID];
     const docId = instance[SYMBOL_VDID];
+
     if (!specId || specId === nodeId) {
       return {
         docId,
         nodeId,
         instance,
+        dom,
       };
     }
   }
   if (!instance && !fiberNode?.return) return null;
-  return getNodeInstance(fiberNode?.return);
+  return getNodeInstance(fiberNode?.return, undefined, dom);
 }
 
 function checkInstanceMounted(instance: any): boolean {

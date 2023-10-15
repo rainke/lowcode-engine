@@ -8,4 +8,5 @@ export interface IPublicTypeNodeInstance<
   nodeId: string;
   instance: T;
   node?: Node | null;
+  dom?: Element | null;
 }
